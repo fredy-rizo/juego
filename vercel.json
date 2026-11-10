@@ -1,7 +1,7 @@
 {
-  "buildCommand": "pygbag --build main.py",
+  "buildCommand": "npm run build",
   "outputDirectory": "build/web",
-  "installCommand": "pip install --break-system-packages --user pygbag pygame-ce",
+  "installCommand": "npm run install",
   "framework": null,
   "rewrites": [
     {
