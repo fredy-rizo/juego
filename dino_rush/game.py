@@ -4,8 +4,11 @@ from __future__ import annotations
 import asyncio
 import math
 import random
+import sys
 
 import pygame
+
+_IS_WEB = sys.platform == "emscripten"
 
 from . import art
 from .audio import Audio
@@ -100,7 +103,9 @@ class Game:
             pygame.init()
         pygame.display.set_caption(TITLE)
 
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+        # En web (pygbag/WASM) pygbag escala el canvas por CSS; el modo RESIZABLE no aplica.
+        flags = 0 if _IS_WEB else pygame.RESIZABLE
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags)
         self.canvas = pygame.Surface((WIDTH, HEIGHT)).convert()
         self.scene = pygame.Surface((WIDTH, HEIGHT)).convert()
         self.fx = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
@@ -230,7 +235,8 @@ class Game:
         try:
             while self.running:
                 raw_dt = self.clock.tick(FPS) / 1000.0
-                dt = min(max(raw_dt, 0.0), 0.05)
+                # En web toleramos frames más lentos sin que el mundo se sienta lento.
+                dt = min(max(raw_dt, 0.0), 0.09 if _IS_WEB else 0.05)
                 for event in pygame.event.get():
                     self.handle_event(event)
                 self.update(dt)
@@ -1065,6 +1071,12 @@ class Game:
         self.present()
 
     def present(self) -> None:
+        if _IS_WEB:
+            # En web el navegador escala el canvas por CSS (casi gratis). Evita el
+            # transform.scale por software cada fotograma en WebAssembly.
+            self.screen.blit(self.canvas, (0, 0))
+            pygame.display.flip()
+            return
         window_w, window_h = self.screen.get_size()
         scale = min(window_w / WIDTH, window_h / HEIGHT)
         scale = max(0.1, scale)
