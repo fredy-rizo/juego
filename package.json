@@ -4,8 +4,8 @@
   "description": "Dino Rush - juego de pygame convertido a WebAssembly con pygbag",
   "main": "index.html",
   "scripts": {
-    "install": "pip install --break-system-packages --user pygbag pygame-ce",
-    "build": "pygbag --build main.py",
+    "install": "pip install --break-system-packages pygbag pygame-ce",
+    "build": "python3 -m pygbag --build main.py",
     "deploy": "vercel --prod --token $VERCEL_TOKEN"
   },
   "keywords": ["pygame", "pygbag", "webassembly", "game"],
