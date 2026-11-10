@@ -1,0 +1,13 @@
+{
+  "name": "juego",
+  "version": "1.0.0",
+  "description": "Dino Rush - juego de pygame convertido a WebAssembly con pygbag",
+  "main": "index.html",
+  "scripts": {
+    "build": "pygbag --build main.py",
+    "deploy": "vercel --prod --token $VERCEL_TOKEN"
+  },
+  "keywords": ["pygame", "pygbag", "webassembly", "game"],
+  "author": "Fredy Rizo",
+  "license": "MIT"
+}

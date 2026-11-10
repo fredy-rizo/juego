@@ -1,6 +1,7 @@
 """Bucle principal, estados, reglas y pantallas de DINO RUSH."""
 from __future__ import annotations
 
+import asyncio
 import math
 import random
 
@@ -225,7 +226,7 @@ class Game:
         self.new_record = False
         self.game_over_reason = ""
 
-    def run(self) -> None:
+    async def run(self) -> None:
         try:
             while self.running:
                 raw_dt = self.clock.tick(FPS) / 1000.0
@@ -235,6 +236,8 @@ class Game:
                 self.update(dt)
                 self.render()
                 self.present()
+                # Cede control al navegador cada frame (necesario en pygbag/WASM).
+                await asyncio.sleep(0)
         finally:
             if self.session_active and not self.run_recorded:
                 self.finalize_run()

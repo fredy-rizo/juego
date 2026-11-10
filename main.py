@@ -8,10 +8,11 @@ Ejecuta: python3 main.py
 """
 from __future__ import annotations
 
+import asyncio
 import os
 
 
-def main() -> int:
+async def main() -> int:
     os.environ.setdefault("SDL_VIDEO_CENTERED", "1")
 
     try:
@@ -33,7 +34,7 @@ def main() -> int:
         pygame.init()
         from dino_rush.game import Game
 
-        Game().run()
+        await Game().run()
     except pygame.error as error:
         print(f"No se pudo iniciar la ventana o el audio: {error}")
         print("Comprueba que haya un entorno gráfico disponible.")
@@ -44,4 +45,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(asyncio.run(main()))
